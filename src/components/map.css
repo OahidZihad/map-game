@@ -1,0 +1,13 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 10px;
+    text-align: center;
+  }
+  .grid-item {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  
+  
