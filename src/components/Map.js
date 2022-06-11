@@ -6,8 +6,10 @@ import { DATA } from "../Data";
 import ScoreBoard from "./ScoreBoard";
 import "./map.css";
 
-Geocode.setApiKey("AIzaSyDqdMhtdf2pIqsMrOyDCMrQja1EiMCgZoU");
+Geocode.setApiKey(`${process.env.REACT_APP_MAP}`);
 Geocode.enableDebug();
+
+console.log(process.env);
 
 const Map = () => {
   const mapStyle = [
@@ -48,20 +50,10 @@ const Map = () => {
   const center = { lat: 54.526, lng: 15.2551 };
 
   const AnyReactComponent = ({ marker, lat, lng, name }) => (
-    <div
-      lat={lat}
-      lng={lng}
-      name={name}
-      onClick={() => handleClick(lat, lng, name)}
-    >
+    <div lat={lat} lng={lng} name={name}>
       {marker}
     </div>
   );
-
-  // const [latLngA, setLatLngA] = useState();
-  // const [latLngD, setLatLngD] = useState();
-  // const [latLngB, setLatLngB] = useState();
-  // const [latLngC, setLatLngC] = useState();
 
   const [data, setData] = useState({
     latLngA: null,
@@ -71,11 +63,8 @@ const Map = () => {
   });
 
   const [score, setScore] = useState(0);
-  const [distance, setDistance] = useState("");
-  // console.log("distance", distance);
-
-  // console.log(latLngA, latLngD, latLngB, latLngC);
-  console.log("data", data);
+  const [distance, setDistance] = useState(0);
+  const [currentDistance, setCurrentDistance] = useState(0);
 
   const toRad = (Value) => {
     return (Value * Math.PI) / 180;
@@ -94,18 +83,11 @@ const Map = () => {
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     var d = R * c;
     if (d > 0) {
-      setDistance(d);
+      setDistance(distance + d);
+      setCurrentDistance(d);
     }
     return d;
   };
-
-  // useEffect(() => {
-  //   calcCrow(data.latLngA, data.latLngD, data.latLngB, data.latLngC).toFixed(1);
-  // }, [data.latLngA, data.latLngD, data.latLngB, data.latLngC]);
-
-  // if ((data.latLngA, data.latLngD, data.latLngB, data.latLngC)) {
-  //   calcCrow(data.latLngA, data.latLngD, data.latLngB, data.latLngC).toFixed(1);
-  // }
 
   const [findRandomCity, setFindRandomCity] = useState("");
 
@@ -127,49 +109,11 @@ const Map = () => {
     };
 
     setData(latLongAD);
-
-    // console.log(itemAddress);
   };
-
-  // const getRandomCityPosition = () => {
-  //   const itemAddress = DATA.cities.filter(
-  //     (item) => item.name === findRandomCity
-  //   )[0];
-
-  //   const latLongAD = {
-  //     latLngA: itemAddress.position.lat,
-  //     latLngD: itemAddress.position.lng,
-  //     latLngB: null,
-  //     latLngC: null,
-  //   };
-
-  //   setData(latLongAD);
-  // };
 
   useEffect(() => {
     randomCityFun();
-    // const intervalId = setInterval(() => {
-    //   randomCityFun();
-    // }, 10000);
-    // return () => clearInterval(intervalId);
   }, []);
-
-  const handleClick = (lat, lng, name) => {
-    // if (randomCity === name) {
-    //   setScore(score + 1);
-    //   randomCityFun();
-    // } else {
-    //   console.log("incorrect");
-    //   randomCityFun();
-    // }
-    // if (distance < 50) {
-    //   console.log("distance22", distance);
-    //   setScore(score + 1);
-    //   randomCityFun();
-    // } else {
-    //   randomCityFun();
-    // }
-  };
 
   const handleOutsideLatLng = (e) => {
     let outsideLat = e.lat;
@@ -186,13 +130,10 @@ const Map = () => {
     setData(latLongBC);
 
     calcCrow(data.latLngA, data.latLngD, outsideLat, outsideLng).toFixed(1);
-    // calcCrow(data.latLngA, data.latLngD, data.latLngB, data.latLngC).toFixed(1);
 
-    if (distance < 50) {
+    if (currentDistance < 50) {
       setScore(score + 1);
       randomCityFun();
-    } else {
-      // randomCityFun();
     }
   };
 
@@ -204,7 +145,7 @@ const Map = () => {
           <GoogleMapReact
             onClick={(e) => handleOutsideLatLng(e)}
             bootstrapURLKeys={{
-              key: "AIzaSyDqdMhtdf2pIqsMrOyDCMrQja1EiMCgZoU",
+              key: `${process.env.REACT_APP_MAP}`,
             }}
             defaultCenter={center}
             center={center}
@@ -212,8 +153,6 @@ const Map = () => {
             options={{
               styles: mapStyle,
             }}
-            // onChange={""}
-            // onChildClick={""}
           >
             {DATA.cities.map((item) => (
               <AnyReactComponent
@@ -236,7 +175,11 @@ const Map = () => {
         </div>
       </div>
       <div className="grid-item">
-        <ScoreBoard score={score} distance={distance}></ScoreBoard>
+        <ScoreBoard
+          score={score}
+          distance={distance}
+          currentDistance={currentDistance}
+        ></ScoreBoard>
       </div>
     </div>
   );
