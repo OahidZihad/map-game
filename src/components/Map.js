@@ -58,66 +58,100 @@ const Map = () => {
     </div>
   );
 
-  const [latLngA, setLatLngA] = useState();
-  const [latLngD, setLatLngD] = useState();
-  const [latLngB, setLatLngB] = useState();
-  const [latLngC, setLatLngC] = useState();
+  // const [latLngA, setLatLngA] = useState();
+  // const [latLngD, setLatLngD] = useState();
+  // const [latLngB, setLatLngB] = useState();
+  // const [latLngC, setLatLngC] = useState();
+
+  const [data, setData] = useState({
+    latLngA: null,
+    latLngD: null,
+    latLngB: null,
+    latLngC: null,
+  });
+
   const [score, setScore] = useState(0);
-  const [distance, setDistance] = useState(0);
-  console.log("distance", distance);
+  const [distance, setDistance] = useState("");
+  // console.log("distance", distance);
 
-  console.log(latLngA, latLngD, latLngB, latLngC);
+  // console.log(latLngA, latLngD, latLngB, latLngC);
+  console.log("data", data);
 
-  function toRad(Value) {
+  const toRad = (Value) => {
     return (Value * Math.PI) / 180;
-  }
+  };
 
-  function calcCrow(latLngA, latLngD, latLngB, latLngC) {
+  const calcCrow = (lat1, lon1, lat2, lon2) => {
     var R = 6371; // km
-    var dLat = toRad(latLngB - latLngA);
-    var dLon = toRad(latLngC - latLngD);
-    var latLngA = toRad(latLngA);
-    var latLngB = toRad(latLngB);
+    var dLat = toRad(lat2 - lat1);
+    var dLon = toRad(lon2 - lon1);
+    var lat1 = toRad(lat1);
+    var lat2 = toRad(lat2);
 
     var a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.sin(dLon / 2) *
-        Math.sin(dLon / 2) *
-        Math.cos(latLngA) *
-        Math.cos(latLngB);
-
-    // if (a < 0) {
+      Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     var d = R * c;
-    // }
     if (d > 0) {
       setDistance(d);
     }
     return d;
-  }
+  };
 
-  useEffect(() => {
-    calcCrow(latLngA, latLngD, latLngB, latLngC).toFixed(1);
-  }, [latLngA, latLngD, latLngB, latLngC]);
+  // useEffect(() => {
+  //   calcCrow(data.latLngA, data.latLngD, data.latLngB, data.latLngC).toFixed(1);
+  // }, [data.latLngA, data.latLngD, data.latLngB, data.latLngC]);
 
-  const [randomCity, setRandomCity] = useState("");
+  // if ((data.latLngA, data.latLngD, data.latLngB, data.latLngC)) {
+  //   calcCrow(data.latLngA, data.latLngD, data.latLngB, data.latLngC).toFixed(1);
+  // }
+
+  const [findRandomCity, setFindRandomCity] = useState("");
 
   const randomCityFun = () => {
     const item = DATA.cities.map((item) => item.name);
     const cityName = Math.floor(Math.random() * item.length);
     var randomCity = item[cityName];
-    setRandomCity(randomCity);
+    setFindRandomCity(randomCity);
 
     const itemAddress = DATA.cities.filter(
       (item) => item.name === randomCity
     )[0];
 
-    setLatLngA(itemAddress.position.lat);
-    setLatLngD(itemAddress.position.lng);
+    const latLongAD = {
+      latLngA: itemAddress.position.lat,
+      latLngD: itemAddress.position.lng,
+      latLngB: null,
+      latLngC: null,
+    };
+
+    setData(latLongAD);
+
+    // console.log(itemAddress);
   };
+
+  // const getRandomCityPosition = () => {
+  //   const itemAddress = DATA.cities.filter(
+  //     (item) => item.name === findRandomCity
+  //   )[0];
+
+  //   const latLongAD = {
+  //     latLngA: itemAddress.position.lat,
+  //     latLngD: itemAddress.position.lng,
+  //     latLngB: null,
+  //     latLngC: null,
+  //   };
+
+  //   setData(latLongAD);
+  // };
 
   useEffect(() => {
     randomCityFun();
+    // const intervalId = setInterval(() => {
+    //   randomCityFun();
+    // }, 10000);
+    // return () => clearInterval(intervalId);
   }, []);
 
   const handleClick = (lat, lng, name) => {
@@ -140,23 +174,32 @@ const Map = () => {
   const handleOutsideLatLng = (e) => {
     let outsideLat = e.lat;
     let outsideLng = e.lng;
-    setLatLngB(outsideLat);
-    setLatLngC(outsideLng);
 
-    console.log("distance33", distance);
+    const latLongBC = {
+      ...data,
+      latLngB: outsideLat,
+      latLngC: outsideLng,
+    };
 
-    if (distance - 1000 < 50) {
+    console.log(latLongBC);
+
+    setData(latLongBC);
+
+    calcCrow(data.latLngA, data.latLngD, outsideLat, outsideLng).toFixed(1);
+    // calcCrow(data.latLngA, data.latLngD, data.latLngB, data.latLngC).toFixed(1);
+
+    if (distance < 50) {
       setScore(score + 1);
       randomCityFun();
     } else {
-      randomCityFun();
+      // randomCityFun();
     }
   };
 
   return (
     <div className="grid-container">
       <div className="grid-item">
-        <h2>Find the city: {randomCity}</h2>
+        <h2>Find the city: {findRandomCity}</h2>
         <div id="map" style={{ height: "60vh", width: "100%" }}>
           <GoogleMapReact
             onClick={(e) => handleOutsideLatLng(e)}
