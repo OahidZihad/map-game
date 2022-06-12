@@ -1,0 +1,15 @@
+.header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    
+}
+
+.header h1{
+    font-size: 3rem;
+    margin: 2rem 0;
+    padding: 0;
+    border-bottom: 2px dotted white;
+    background: radial-gradient(closest-side, #ffffff50, transparent);
+}

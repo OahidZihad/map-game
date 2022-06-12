@@ -12,6 +12,9 @@ Geocode.enableDebug();
 const Map = () => {
   const mapStyle = [
     {
+      color: "#000",
+    },
+    {
       elementType: "labels",
       stylers: [
         {
@@ -42,6 +45,12 @@ const Map = () => {
           visibility: "off",
         },
       ],
+    },
+
+    {
+      featureType: "water",
+      elementType: "geometry",
+      stylers: [{ color: "#17263c" }],
     },
   ];
 
@@ -137,7 +146,12 @@ const Map = () => {
   return (
     <div className="grid-container">
       <div className="grid-item">
-        <h2>Find the city: {findRandomCity}</h2>
+        <h2>
+          Find the City:{" "}
+          <span style={{ fontSize: "1.3em", textDecoration: "underline" }}>
+            {findRandomCity}
+          </span>
+        </h2>
         <div id="map" style={{ height: "60vh", width: "100%" }}>
           <GoogleMapReact
             onClick={(e) => handleOutsideLatLng(e)}

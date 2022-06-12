@@ -29,7 +29,7 @@ const ScoreBoard = ({ score, distance, currentDistance }) => {
   }
 
   return (
-    <div>
+    <div className="scoreBoard">
       <h2>Score Board</h2>
       <h3>Total Kilometer: 1500</h3>
       <h3>Distance: {distance}</h3>

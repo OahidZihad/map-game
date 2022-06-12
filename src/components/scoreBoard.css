@@ -1,0 +1,22 @@
+.scoreBoard{
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.scoreBoard h2{
+    font-size: 2.2em;
+    text-decoration: underline;
+}
+
+.scoreBoard h3{
+    font-size: 1.4rem;
+}
+
+@media only screen and (max-width: 700px) {
+    .scoreBoard{
+      display: block;
+    }
+  }

@@ -1,15 +1,26 @@
+
 .grid-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2fr 1fr;
     padding: 10px;
     text-align: center;
+    justify-content: center;
+    align-items: center;
   }
+
   .grid-item {
     padding: 20px;
     text-align: center;
   }
 
-  @media only screen and (max-width: 650px) {
+  #map{
+    background-color: black;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 10px 10px 20px #ffffff15;
+  }
+
+  @media only screen and (max-width: 700px) {
     .grid-container{
       grid-template-columns: 1fr;
     }
