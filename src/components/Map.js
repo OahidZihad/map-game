@@ -9,8 +9,6 @@ import "./map.css";
 Geocode.setApiKey(`${process.env.REACT_APP_MAP}`);
 Geocode.enableDebug();
 
-console.log(process.env);
-
 const Map = () => {
   const mapStyle = [
     {
@@ -65,6 +63,7 @@ const Map = () => {
   const [score, setScore] = useState(0);
   const [distance, setDistance] = useState(0);
   const [currentDistance, setCurrentDistance] = useState(0);
+  const [findRandomCity, setFindRandomCity] = useState("");
 
   const toRad = (Value) => {
     return (Value * Math.PI) / 180;
@@ -88,8 +87,6 @@ const Map = () => {
     }
     return d;
   };
-
-  const [findRandomCity, setFindRandomCity] = useState("");
 
   const randomCityFun = () => {
     const item = DATA.cities.map((item) => item.name);
