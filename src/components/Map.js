@@ -54,9 +54,11 @@ const Map = () => {
     },
   ];
 
-  const center = { lat: 54.526, lng: 15.2551 };
+  const center = { lat: 54.526, lng: 15.2551 }; // set Europe map as center
 
-  const AnyReactComponent = ({ marker, lat, lng, name }) => (
+  const AnyReactComponent = (
+    { marker, lat, lng, name } // red marker
+  ) => (
     <div lat={lat} lng={lng} name={name}>
       {marker}
     </div>
@@ -74,6 +76,7 @@ const Map = () => {
   const [currentDistance, setCurrentDistance] = useState(0);
   const [findRandomCity, setFindRandomCity] = useState("");
 
+  //calculate the distance from two coordinates
   const toRad = (Value) => {
     return (Value * Math.PI) / 180;
   };
@@ -98,6 +101,7 @@ const Map = () => {
   };
 
   const randomCityFun = () => {
+    // function to get a random city to find with latitude & longitude
     const item = DATA.cities.map((item) => item.name);
     const cityName = Math.floor(Math.random() * item.length);
     var randomCity = item[cityName];
@@ -122,6 +126,7 @@ const Map = () => {
   }, []);
 
   const handleOutsideLatLng = (e) => {
+    // function to get the longitude and latitude where the user click
     let outsideLat = e.lat;
     let outsideLng = e.lng;
 
@@ -138,6 +143,7 @@ const Map = () => {
     calcCrow(data.latLngA, data.latLngD, outsideLat, outsideLng).toFixed(1);
 
     if (currentDistance < 50) {
+      // score will inclease if user clicked between 50km area
       setScore(score + 1);
       randomCityFun();
     }
